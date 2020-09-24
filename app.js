@@ -1,3 +1,7 @@
+const fs = require('fs');
+const generatePage = require('./src/page-template');
+
+
 const inquirer = require('inquirer')
 
 const promptUser = () => {
@@ -17,7 +21,7 @@ const promptUser = () => {
     },
     {
       type: 'input',
-      name: 'github username',
+      name: 'github',
       message: 'Enter your GitHub Username',
       validate: nameInput => {
         if (nameInput) {
@@ -62,7 +66,7 @@ Add a New Project
   return inquirer.prompt([
     {
       type: 'input',
-      name: 'project name',
+      name: 'name',
       message: 'What is the name of your project?',
       validate: nameInput => {
         if (nameInput) {
@@ -94,7 +98,7 @@ Add a New Project
     },
     {
       type: 'input',
-      name: 'github link',
+      name: 'link',
       message: 'Enter the GitHub link to your project. (Required)',
       validate: nameInput => {
         if (nameInput) {
@@ -133,11 +137,16 @@ Add a New Project
 promptUser()
   .then(promptProject)
   .then(portfolioData => {
-    console.log(portfolioData);
+    const pageHTML = generatePage(portfolioData);
+
+    fs.writeFile('./index.html', pageHTML, err => {
+      if (err) throw new Error(err);
+
+      console.log('Page created! Check out index.html in this directory to see it!');
+    });
+    
   });
 
-// const fs = require('fs');
-// const generatePage = require('./src/page-template');
 
 // const pageHTML = generatePage(name, github);
 
